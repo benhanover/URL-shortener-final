@@ -8,37 +8,47 @@ class DataBase {
   }
 
   addLink(url) {
+    console.log(url);
     // fetching the list from jsonBin
-    fetch("https://api.jsonbin.io/b/6040925281087a6a8b95f6c2")
+    return fetch("https://api.jsonbin.io/b/6040925281087a6a8b95f6c2")
     .then((res) => {res.json()
-    .then((data) => {this.urls = data})
-    });
+    .then((data) => {
+    this.urls = data;
     const shortenUrl = new ShortUrl(url);
     // adding the new link
     this.urls.push(shortenUrl);
-    options = {
+    const options = {
       method: "PUT",
-      headers = {
+      headers : {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(this.urls)
     }
-    // sending the updated list to the jsonBin
-    return fetch("https://api.jsonbin.io/b/6040925281087a6a8b95f6c2", options);
-  }
-  
-  getLink(searchedUrl) {
-    fetch("https://api.jsonbin.io/b/6040925281087a6a8b95f6c2")
-    .then((res) => {res.json()
-    .then((data) => {this.urls = data})
-    });
-
-    for (const shortenUrl of this.urls) {
-      if (shortenUrl.longUrl === searchedUrl) {
+    return fetch("https://api.jsonbin.io/b/60410b930866664b1088af96", options)
+    .then((res) => {
+      if(!res.ok) {
+        throw new Error("Couldnt add link");
+      } else { 
         return shortenUrl;
       }
-    }
-    return "Could not find link";
+    });
+    });
+   });
+  }
+  
+  findLink(searchedUrl) {
+    fetch("https://api.jsonbin.io/b/60410b930866664b1088af96")
+    .then((res) => {res.json()
+    .then((data) => {
+      this.urls = data;
+      for (const shortenUrl of this.urls) {
+        if (shortenUrl.longUrl === searchedUrl) {
+          return shortenUrl;
+        }
+      }
+    })
+    });
+    return false;
     }
   }
     
@@ -46,7 +56,7 @@ class DataBase {
 class ShortUrl {
   constructor(url) {
     this.longUrl = url;
-    this.id = newID();
+    this.id = this.newID();
     this.createdAt = new Date();
     this.clicks = 0;
   }
@@ -61,3 +71,6 @@ class ShortUrl {
     return id;
   }
 }
+module.exports = DataBase;
+
+
