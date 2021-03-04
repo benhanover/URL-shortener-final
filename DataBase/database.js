@@ -8,63 +8,81 @@ class DataBase {
   }
 
   addLink(url) {
-    // fetching the list from jsonBin
-    return fetch("https://api.jsonbin.io/b/6040925281087a6a8b95f6c2")
+    
+    return fetch("https://api.jsonbin.io/b/604137bc0866664b1088c824/latest")
     .then((res) => {return res.json()
-    .then((data) => {
-    this.urls = data;
-    let shortenUrl = new ShortUrl(url);
-    // making sure we hava a uniqe id by finding its index if not found its uniqe
-    let isUniqeId = this.urls.findIndex((url) => {
-      url.id === shortenUrl.id;
-    }); 
-    while (isUniqeId !== -1) {
-      shortenUrl = new ShortUrl(url);
-    }
-    // adding the new link
-    this.urls.push(shortenUrl);
-    const options = {
-      method: "PUT",
-      headers : {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(this.urls)
-    }
-    return fetch("https://api.jsonbin.io/b/60410b930866664b1088af96", options)
-    .then((res) => {
-      if(!res.ok) {
-        throw new Error("Couldnt add link");
-      } else {
-        // console.log(shortenUrl);
-        return shortenUrl;
+    .then(async (data) => 
+    {
+      this.urls = data;
+      let shortenUrl = new ShortUrl(url);
+      
+      let isUniqeId = this.urls.findIndex((url) => {
+        url.shorten_url === shortenUrl.shorten_url;
+      }); 
+      while (isUniqeId !== -1) {
+        shortenUrl = new ShortUrl(url);
       }
-    });
+
+      this.urls.push(shortenUrl);
+      await this.save();
+      return shortenUrl;
     });
    });
   }
   
-  findLink(searchedUrl) {
-    fetch("https://api.jsonbin.io/b/60410b930866664b1088af96")
-    .then((res) => {res.json()
-    .then((data) => {
+   findLink (searchedUrl) {
+    return fetch("https://api.jsonbin.io/b/604137bc0866664b1088c824/latest")
+    .then ((res) => {return res.json()
+    .then( async (data) =>  
+    {
       this.urls = data;
-      for (const shortenUrl of this.urls) {
-        if (shortenUrl.longUrl === searchedUrl) {
-          return shortenUrl;
+      for (const urlObj of this.urls) {
+        if (urlObj.original_url === searchedUrl) {
+          urlObj.clicks++;
+          await this.save();
+          return urlObj;
         }
       }
-    })
+      return false;
     });
-    return false;
+    });
     }
+
+    save() {
+      const options = {
+        method: "PUT",
+        headers : {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(this.urls)
+      }
+      fetch("https://api.jsonbin.io/b/604137bc0866664b1088c824", options)
+      .then((res) => {
+        if(!res.ok) {
+          throw new Error("error in save");
+        } else {
+          return "Data saved succsefuly"
+        }
+      });
+    }
+
+    getLinks() {
+      return fetch("https://api.jsonbin.io/b/604137bc0866664b1088c824/latest")
+      .then((res) => {
+        return res.json()
+        .then((data) => {
+          return data;
+        });
+      });
   }
+}
     
 
 class ShortUrl {
   constructor(url) {
-    this.longUrl = url;
-    this.id = this.newID();
-    this.createdAt = new Date();
+    this.original_url = url;
+    this.shorten_url = this.newID();
+    this.createdAt = new Date().toISOString().slice(0, 19).replace("T", " ");
     this.clicks = 0;
   }
 

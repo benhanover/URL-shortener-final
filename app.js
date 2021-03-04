@@ -22,36 +22,41 @@ app.get("/", (req, res) => {
 
 
 app.post("/api/shorturl/new", urlencodedParser, (req, res) => {
-  const found = dataBase.addLink(req.body.url)
-  .then((response) => res.send(response));
-  // .then((res) => res.json()
-  // .then((data) => console.log(data))
-  // );
-  // console.log(found);
-  // res.send(found);
+  url = req.body.url;
+  // console.log(url);
+  dataBase.findLink(url)
+  .then((found) => {
+    if (found) {
+      res.send(found);
+    } else {
+      dataBase.addLink(url)
+      .then((shortenUrlObj) => {
+        if (shortenUrlObj) {
+          res.send(shortenUrlObj);
+        }
+      });
+    }
+  });
+});
 
-
+app.get("/:shorten", (req, res) => {
+  const { shorten } = req.params;
+  dataBase.getLinks()
+  .then((data) => {
+    const urls = data;
+    console.log("urls:")
+    console.log(urls)
+    console.log("shorten:")
+    console.log(shorten);
   
-  // // if (found) {
-  // //   res.send(found);
-  // }
+    for (const url of urls) {
 
-  // dataBase.findLink(req.body.blabla)
-  // .then((req) => {req.json()
-  // .then((data) => {
-  //   const found = data;
-  //   if (found) {
-  //     res.send(found);
-  //   } else {
-  //     dataBase.addLink(req.body)
-  //     .then((res) => res.json()
-  //     .then((data) => {
-  //       res.send(data);
-  //     })
-  //     ).catch((e) => {res.send(e)});
-  //   }
-  // });
-  // });
+      if (url.shorten_url === shorten) {
+        console.log(url.original_url);
+        res.redirect(301, url.original_url);
+      }
+    }
+  });
 });
 
 
