@@ -21,12 +21,19 @@ app.get("/", (req, res) => {
 });
 
 
-app.post("/api/shorturl/new", urlencodedParser,  async (req, res) => {
-  // res.send(req.body);
-  const found = dataBase.findLink(req.body.blabla);
-  res.send(found);
-  // if (found) {
-  //   res.send(found);
+app.post("/api/shorturl/new", urlencodedParser, (req, res) => {
+  const found = dataBase.addLink(req.body.url)
+  .then((response) => res.send(response));
+  // .then((res) => res.json()
+  // .then((data) => console.log(data))
+  // );
+  // console.log(found);
+  // res.send(found);
+
+
+  
+  // // if (found) {
+  // //   res.send(found);
   // }
 
   // dataBase.findLink(req.body.blabla)

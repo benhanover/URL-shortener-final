@@ -8,13 +8,19 @@ class DataBase {
   }
 
   addLink(url) {
-    console.log(url);
     // fetching the list from jsonBin
     return fetch("https://api.jsonbin.io/b/6040925281087a6a8b95f6c2")
-    .then((res) => {res.json()
+    .then((res) => {return res.json()
     .then((data) => {
     this.urls = data;
-    const shortenUrl = new ShortUrl(url);
+    let shortenUrl = new ShortUrl(url);
+    // making sure we hava a uniqe id by finding its index if not found its uniqe
+    let isUniqeId = this.urls.findIndex((url) => {
+      url.id === shortenUrl.id;
+    }); 
+    while (isUniqeId !== -1) {
+      shortenUrl = new ShortUrl(url);
+    }
     // adding the new link
     this.urls.push(shortenUrl);
     const options = {
@@ -28,7 +34,8 @@ class DataBase {
     .then((res) => {
       if(!res.ok) {
         throw new Error("Couldnt add link");
-      } else { 
+      } else {
+        // console.log(shortenUrl);
         return shortenUrl;
       }
     });
