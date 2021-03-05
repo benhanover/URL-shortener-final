@@ -48,6 +48,20 @@ app.post("/api/shorturl/new", urlencodedParser, (req, res) => {
   });
 });
 
+app.get("/api/statistic/:id", (req, res) => {
+  const { id } = req.params;
+  dataBase.getLinks()
+  .then((data) => {
+    const urls = data;
+    for (const url of urls) {
+      if (url.shorten_url === id) {
+        res.send(url);
+      }
+    }
+  });
+});
+
+
 
 // browser is remembering the url and so it only gets inside here the first time
 // problem with save
@@ -69,18 +83,6 @@ app.get("/:id", (req, res) => {
   });
 });
 
-app.get("/api/statistic/:id", (req, res) => {
-  const { id } = req.params;
-  dataBase.getLinks()
-  .then((data) => {
-    const urls = data;
-    for (const url of urls) {
-      if (url.shorten_url === id) {
-        res.send(url);
-      }
-    }
-  });
-});
 
 
 module.exports = app;
