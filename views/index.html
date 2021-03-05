@@ -8,26 +8,25 @@
   </head>
 
   <body>
-    <h1>URL Shortener Microservice</h1>
+    <h1>URL Shortener</h1>
     <main>
       <section>
         <form action="api/shorturl/new" method="POST">
-          <fieldset>
-            <legend>URL Shortener</legend>
-            <label for="url_input">URL:</label>
+          <p id="p-form">	
+            ShortURL was designed to help your work look elegant!</p>
             <input
               id="url_input"
               type="text"
               name="url"
-              placeholder="https://www.freecodecamp.org/"
+              placeholder="URL"
             />
-            <input type="submit" value="POST URL" />
-          </fieldset>
+            <input type="submit" value="POST URL" id="submit-button"/>
         </form>
       </section>
     </main>
     <footer>
-      <p>By <a href="https://www.freecodecamp.org/">freeCodeCamp</a></p>
+      <p id="p-footer">By <a href="https://github.com/benhanover">Ben Hanover</a></p>
     </footer>
+    <!-- <div class="loader" id="spinner"></div> -->
   </body>
 </html>

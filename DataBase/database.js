@@ -8,7 +8,6 @@ class DataBase {
   }
 
   addLink(url) {
-    
     return fetch("https://api.jsonbin.io/b/604137bc0866664b1088c824/latest")
     .then((res) => {return res.json()
     .then(async (data) => 
@@ -33,13 +32,14 @@ class DataBase {
    findLink (searchedUrl) {
     return fetch("https://api.jsonbin.io/b/604137bc0866664b1088c824/latest")
     .then ((res) => {return res.json()
-    .then( async (data) =>  
+    .then((data) =>  
     {
       this.urls = data;
       for (const urlObj of this.urls) {
         if (urlObj.original_url === searchedUrl) {
-          urlObj.clicks++;
-          await this.save();
+          // add async if needed
+          // urlObj.clicks++;
+          // await this.save();
           return urlObj;
         }
       }
