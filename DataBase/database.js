@@ -7,21 +7,29 @@ class DataBase {
     this.urls = [];
   }
 
-  addLink(url) {
+  addLink(url, desiredLink) {
+    // fetch the array
     return fetch("https://api.jsonbin.io/b/604137bc0866664b1088c824/latest")
     .then((res) => {return res.json()
     .then(async (data) => 
     {
       this.urls = data;
       let shortenUrl = new ShortUrl(url);
-      
-      let isUniqeId = this.urls.findIndex((url) => {
-        url.shorten_url === shortenUrl.shorten_url;
-      }); 
-      while (isUniqeId !== -1) {
-        shortenUrl = new ShortUrl(url);
+      // checks if client want a specific url
+      if (desiredLink) {
+        shortenUrl.shorten_url = desiredLink;
       }
-
+      let isUniqeId = this.urls.findIndex(url => url.shorten_url === desiredLink);
+      if (isUniqeId !== -1) {
+        return {error: "name is already taken"};
+      }
+      // make sure to bring uniqe id
+      if (!desiredLink)
+      {
+        while (isUniqeId !== -1) {
+          shortenUrl = new ShortUrl(url);
+        }
+      }
       this.urls.push(shortenUrl);
       await this.save();
       return shortenUrl;

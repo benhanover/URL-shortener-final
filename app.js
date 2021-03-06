@@ -18,6 +18,7 @@ app.get("/", (req, res) => {
 
 app.post("/api/shorturl/new", urlencodedParser, (req, res) => {
   url = req.body.url;
+  desiredLink = req.body.askedShorten;
   fetch(url)
   .then(() => {
     dataBase.findLink(url)
@@ -28,13 +29,19 @@ app.post("/api/shorturl/new", urlencodedParser, (req, res) => {
           shorten_url: found.shorten_url
           });
       } else {
-    dataBase.addLink(url)
+    dataBase.addLink(url, desiredLink)
       .then((shortenUrlObj) => {
         if (shortenUrlObj) {
-          return res.send({
-           original_url: shortenUrlObj.original_url,
-           shorten_url: shortenUrlObj.shorten_url
-         });
+          if(shortenUrlObj.error !== undefined) {
+            // console.log("im in the if");
+            return res.send(shortenUrlObj);
+          } else {
+            // console.log("im in the else");
+            return res.send({
+              original_url: shortenUrlObj.original_url,
+              shorten_url: shortenUrlObj.shorten_url
+            });
+          }
         }
       });
       }
