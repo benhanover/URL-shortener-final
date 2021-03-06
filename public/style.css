@@ -49,6 +49,10 @@ form {
   margin: 10px auto;
   padding: 20px;
   max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 input {
@@ -60,9 +64,13 @@ input {
   
 }
 #submit-button {
-  width: 150px;
+  width: 200px;
   background-color: rgb(236, 173, 57);
   color: black;
+  font-size: 2rem;
+  font-weight: 500;
+  margin: 30px;
+  cursor: pointer;
 }
 
 #p-footer {
@@ -77,6 +85,25 @@ a {
   background-color: rgb(236, 173, 57);
   color: black;
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 400;
   margin-bottom: 50px;
+  cursor: pointer;
+}
+#table-section {
+  background-color: rgb(228, 151, 151);
+  font-size: 2rem;
+  font-weight: 300;
+}
+#table-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+td {
+  padding: 10px;
+}
+footer {
+  position: absolute;
+  bottom: 20px;
+  right: 45%;
 }
