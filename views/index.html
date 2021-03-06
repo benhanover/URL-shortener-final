@@ -22,14 +22,85 @@
               placeholder="URL"
             />
             <input type="submit" value="Shorten URL" id="submit-button"/>
-        </form>
+          </form>
+          <button id="statistic-button">Statistics</button>
       </section>
-      <section>
+      <section id="table-section" hidden>
+        <table>
+          <thead>
+            <tr>
+              <th>Original Url</th>
+              <th>Shorten Url</th>
+              <th>Created At</th>
+              <th>Clicks</th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+          </tbody>
+        </table>
       </section>
     </main>
     <footer>
       <p id="p-footer">By <a href="https://github.com/benhanover">Ben Hanover</a></p>
     </footer>
-    <!-- <div class="loader" id="spinner"></div> -->
+    <script>
+      const section = document.getElementById('table-section');
+      fetch("http://localhost:3000/api/statistics")
+      .then((res) => {
+        res.json()
+        .then((data) => {
+          const linkList = data;
+          statisticTable(linkList);
+        });
+      });
+
+      function statisticTable(linkList) {
+
+        const tbody = document.getElementById('tbody');
+
+        for(const link of linkList) {
+          console.log(link);
+
+          const tr = document.createElement('tr');
+          tbody.appendChild(tr);
+
+          const tdOriginalUrl = document.createElement('td');
+          tdOriginalUrl.innerText = link.original_url;
+          tr.appendChild(tdOriginalUrl);
+
+          const tdShortenUrl = document.createElement('td');
+          tdShortenUrl.innerText = link.shorten_url;
+          tr.appendChild(tdShortenUrl);
+
+          const tdCreatedAt = document.createElement('td');
+          tdCreatedAt.innerText = link.createdAt;
+          tr.appendChild(tdCreatedAt);
+
+          const tdClicks = document.createElement('td');
+          tdClicks.innerText = link.clicks;
+          tr.appendChild(tdClicks);
+
+
+
+
+          // const trString = 
+          // `
+          //   <tr>
+          //     <td>${link.original_url}</td>
+          //     <td>${link.shorten_url}</td>
+          //     <td>${link.createdAt}</td>
+          //     <td>${link.clicks}</td>
+          //   </tr>
+          // `;
+          tbody.insertAdjacentElement('beforeend',tr);
+        }
+      }
+      const statisticButton = document.getElementById("statistic-button");
+      statisticButton.addEventListener("click", (e) => {
+      section.hidden = !section.hidden;
+      });
+
+
+    </script>
   </body>
 </html>

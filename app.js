@@ -5,15 +5,10 @@ const bodyParser = require('body-parser');
 const app = express();
 const fetch = require("node-fetch");
 let urlencodedParser = bodyParser.urlencoded({ extended: false });
-
-
-// // class
 const DataBase = require("./DataBase/database.js");
-// // // object
 const dataBase = new DataBase();
 
 app.use(cors());
-// app.use(express.json());
 
 app.use("/public", express.static(`./public`));
 
@@ -21,31 +16,34 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
-
 app.post("/api/shorturl/new", urlencodedParser, (req, res) => {
   url = req.body.url;
-  fetch(url).catch((e) =>{
-    res.send({error: "invalid URL"});
-  });
-  dataBase.findLink(url)
-  .then((found) => {
-    if (found) {
-      res.send({
-        original_url: found.original_url,
-        shorten_url: found.shorten_url
-      });
-    } else {
-      dataBase.addLink(url)
+  fetch(url)
+  .then(() => {
+    dataBase.findLink(url)
+    .then((found) => {
+      if (found) {
+        return res.send({
+          original_url: found.original_url,
+          shorten_url: found.shorten_url
+          });
+      } else {
+    dataBase.addLink(url)
       .then((shortenUrlObj) => {
         if (shortenUrlObj) {
-          res.send({
-            original_url: shortenUrlObj.original_url,
-            shorten_url: shortenUrlObj.shorten_url
-          });
+          return res.send({
+           original_url: shortenUrlObj.original_url,
+           shorten_url: shortenUrlObj.shorten_url
+         });
         }
       });
-    }
+      }
+    });
+  })
+  .catch((e) =>{
+    return res.status(400).send({error: "invalid URL"});
   });
+ 
 });
 
 app.get("/api/statistic/:id", (req, res) => {
@@ -55,34 +53,43 @@ app.get("/api/statistic/:id", (req, res) => {
     const urls = data;
     for (const url of urls) {
       if (url.shorten_url === id) {
-        res.send(url);
+        return res.status(200).send(url);
       }
     }
+  }).catch((e) => {return res.status(400).json("Cannot find id in our system")});
+});
+
+app.get("/api/statistics", (req, res) => {
+  dataBase.getLinks()
+  .then((data) => {
+    return res.json(data);
   });
 });
 
 
 
-// browser is remembering the url and so it only gets inside here the first time
-// problem with save
+
 app.get("/:id", (req, res) => {
-  console.log("im here");
   const { id } = req.params;
   dataBase.getLinks()
-  .then(async (data) => {
+  .then((data) => {
     const urls = data;
-    for (const url of urls) {
-      if (url.shorten_url === id) {
-        console.log(url.clicks);
-        url.clicks++;
-        console.log(url.clicks);
-        await dataBase.save();
-        res.redirect(301, url.original_url);
-      }
+    const index = urls.findIndex((url) => {return url.shorten_url === id;});
+    if (index === -1) {
+      return res.status((400).json("Cannot find id in our system"));
     }
+    urls[index].clicks++;
+    dataBase.save()
+    .then(() => {
+      return res.redirect(303, urls[index].original_url);
+    }).catch((e) => {return res.status(500).json('There was some trouble: ' + e)});
   });
 });
 
 
-
+app.get("/reset/666",async (req, res) => {
+  await dataBase.reset();
+  return res.status(200).json("reseted succefully");
+});
+module.exports = { dataBase };
 module.exports = app;

@@ -49,6 +49,7 @@ class DataBase {
     }
 
     save() {
+
       const options = {
         method: "PUT",
         headers : {
@@ -56,7 +57,7 @@ class DataBase {
         },
         body: JSON.stringify(this.urls)
       }
-      fetch("https://api.jsonbin.io/b/604137bc0866664b1088c824", options)
+      return fetch("https://api.jsonbin.io/b/604137bc0866664b1088c824", options)
       .then((res) => {
         if(!res.ok) {
           throw new Error("error in save");
@@ -66,11 +67,36 @@ class DataBase {
       });
     }
 
+    reset() {
+      const options = {
+        method: "PUT",
+        headers : {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify([{
+          "original_url": "https://www.gotchacap.com/",
+          "shorten_url": "omOl4",
+          "createdAt": "2021-03-05 16:00:29",
+          "clicks": 0
+        }])
+      }
+      fetch("https://api.jsonbin.io/b/604137bc0866664b1088c824", options)
+      .then((res) => {
+        if(!res.ok) {
+          throw new Error("error in reset");
+        } else {
+          return "reset succsefuly"
+        }
+      });
+    }
+
+
     getLinks() {
       return fetch("https://api.jsonbin.io/b/604137bc0866664b1088c824/latest")
       .then((res) => {
         return res.json()
         .then((data) => {
+          this.urls = data;
           return data;
         });
       });
