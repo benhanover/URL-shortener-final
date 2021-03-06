@@ -19,31 +19,33 @@
               id="url_input"
               type="text"
               name="url"
-              placeholder="URL"
+              placeholder="URL to be shorten"
             />
             <input
               id="askedShorten"
               type="text"
               name="askedShorten"
-              placeholder="shorten url you desire"
+              placeholder="URL you desire"
             />
             <input type="submit" value="Shorten URL" id="submit-button"/>
           </form>
           <button id="statistic-button">Statistics</button>
       </section>
       <section id="table-section" hidden>
-        <table>
-          <thead>
-            <tr>
-              <th>Original Url</th>
-              <th>Shorten Url</th>
-              <th>Created At</th>
-              <th>Clicks</th>
-            </tr>
-          </thead>
-          <tbody id="tbody">
-          </tbody>
-        </table>
+        <div id="table-container">
+          <table id="table">
+            <thead>
+              <tr>
+                <th>Original Url</th>
+                <th>Shorten Url</th>
+                <th>Created At</th>
+                <th>Clicks</th>
+              </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+          </table>
+        </div>
       </section>
     </main>
     <footer>
@@ -65,7 +67,6 @@
         const tbody = document.getElementById('tbody');
 
         for(const link of linkList) {
-          console.log(link);
 
           const tr = document.createElement('tr');
           tbody.appendChild(tr);

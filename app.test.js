@@ -64,6 +64,19 @@ describe("TESTING POST VALID URL", () => {
 
 
 
+describe("TESTING THE USER URL NAME", () => {
+  it("should reject used id", async () => {
+    const res = await request.post('/api/shorturl/new')
+    .send({
+      url: "https://www.convertonline.io/convert/js-to-json",
+      askedShorten: "testMe:)"
+    })
+    .type('form');
+    expect(res.body).toStrictEqual({error: "name is already taken"});
+  });
+});
+
+
 app.listen(3000, () => {console.log("Testing on port 3000")});
 
 
