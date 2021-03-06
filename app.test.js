@@ -3,31 +3,39 @@ const supertest = require("supertest");
 const request = supertest(app);
 // let nock = require('nock');
 
+
+
+
 // Supertest end points.
+
+
+
 describe("TESTING GET ENDPOINTS", () => {
 
   expectedOutput = {
       "original_url": "https://www.gotchacap.com/",
-      "shorten_url": "omOl4",
+      "shorten_url": "testMe:)",
       "createdAt": "2021-03-05 16:00:29",
       "clicks": 0
   };
-
-  it("Testing get statistic",async () => {
-    const response = await request.get('/api/statistic/omOl4');
-    expect(response.status).toBe(200);
-    expect(response.body).toStrictEqual(expectedOutput);
-  });
-
-  it("Testing redirection", async () => {
-    const response = await request.get('/omOl4');
-    expect(response.status).toBe(303);
-  });
 
   it("Testing reset database", async () => {
     const response = await request.get('/reset/666');
     expect(response.status).toBe(200);
   });
+
+  it("Testing get statistic",async () => {
+    const response = await request.get('/api/statistic/testMe:)');
+    expect(response.status).toBe(200);
+    expect(response.body).toStrictEqual(expectedOutput);
+  });
+
+  it("Testing redirection", async () => {
+    const response = await request.get('/testMe:)');
+    expect(response.status).toBe(303);
+  });
+
+
 });
 
 
@@ -62,8 +70,6 @@ describe("TESTING POST VALID URL", () => {
   });
 });
 
-
-
 describe("TESTING THE USER URL NAME", () => {
   it("should reject used id", async () => {
     const res = await request.post('/api/shorturl/new')
@@ -75,6 +81,7 @@ describe("TESTING THE USER URL NAME", () => {
     expect(res.body).toStrictEqual({error: "name is already taken"});
   });
 });
+
 
 
 app.listen(3000, () => {console.log("Testing on port 3000")});

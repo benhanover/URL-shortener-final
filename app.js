@@ -8,6 +8,8 @@ let urlencodedParser = bodyParser.urlencoded({ extended: false });
 const DataBase = require("./DataBase/database.js");
 const dataBase = new DataBase();
 
+
+
 app.use(cors());
 
 app.use("/public", express.static(`./public`));
@@ -33,10 +35,8 @@ app.post("/api/shorturl/new", urlencodedParser, (req, res) => {
       .then((shortenUrlObj) => {
         if (shortenUrlObj) {
           if(shortenUrlObj.error !== undefined) {
-            // console.log("im in the if");
             return res.send(shortenUrlObj);
           } else {
-            // console.log("im in the else");
             return res.send({
               original_url: shortenUrlObj.original_url,
               shorten_url: shortenUrlObj.shorten_url

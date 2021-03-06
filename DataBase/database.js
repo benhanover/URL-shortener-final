@@ -1,10 +1,12 @@
 const API_KEY = "$2b$10$Gngt6a2X5rSlrH5bkOyscea5zrXZQGieIPFU6D02.H8lZidUy7n3a"
 const { application } = require('express');
 
-// const url = process.env.NODE_ENV === 'test' ? './backend/testdata.json':'https://api.jsonbin.io/b/604137bc0866664b1088c824/latest';
+// // const databaseFile = process.env.NODE_ENV === 'test' ? './backend/testdata.json':'./backend/data.json';
+// // console.log("this is the state: " , process.env.NODE_ENV);
+// const url = "https://api.jsonbin.io/b/604137bc0866664b1088c824/latest";
+// // const url = process.env.NODE_ENV === 'test' ? "https://api.jsonbin.io/b/604137bc0866664b1088c824" : "https://api.jsonbin.io/b/6043a019683e7e079c465018";
 
-
-
+// now everything works lalalalala
 
 const fetch = require('node-fetch');
 
@@ -51,9 +53,6 @@ class DataBase {
       this.urls = data;
       for (const urlObj of this.urls) {
         if (urlObj.original_url === searchedUrl) {
-          // add async if needed
-          // urlObj.clicks++;
-          // await this.save();
           return urlObj;
         }
       }
@@ -89,7 +88,7 @@ class DataBase {
         },
         body: JSON.stringify([{
           "original_url": "https://www.gotchacap.com/",
-          "shorten_url": "omOl4",
+          "shorten_url": "testMe:)",
           "createdAt": "2021-03-05 16:00:29",
           "clicks": 0
         }])
