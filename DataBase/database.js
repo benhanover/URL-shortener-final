@@ -1,5 +1,11 @@
 const API_KEY = "$2b$10$Gngt6a2X5rSlrH5bkOyscea5zrXZQGieIPFU6D02.H8lZidUy7n3a"
 const { application } = require('express');
+
+// const url = process.env.NODE_ENV === 'test' ? './backend/testdata.json':'https://api.jsonbin.io/b/604137bc0866664b1088c824/latest';
+
+
+
+
 const fetch = require('node-fetch');
 
 class DataBase {
