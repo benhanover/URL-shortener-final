@@ -6,7 +6,7 @@ I created a uniqe URL shortener.
 -table of all available shorten links
 -json bin as data base
 
-https://repl.it/@Benos/URL-shortener-final#DataBase/database.js
-
-** somewhere in the process i accidently merged the pull request.. :(
+![Home](/assets/Home.png)
+![ShortenUrl](/assets/ShortenUrl.png)
+![Statistics](/assets/RealStatistics.png)
 
